@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: cbcm-slack-bot
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: SLACK_BOT_TOKEN
+        value: YOUR_SLACK_BOT_TOKEN
+      - key: SLACK_SIGNING_SECRET
+        value: YOUR_SIGNING_SECRET
+      - key: SLACK_APP_TOKEN
+        value: YOUR_SLACK_APP_TOKEN
+      - key: OPENAI_API_KEY
+        value: YOUR_OPENAI_API_KEY
