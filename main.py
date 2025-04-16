@@ -23,20 +23,33 @@ def track_update(ack, respond, command):
 @app.command("/summary")
 def summary(ack, respond, command):
     ack()
-    dummy_data = """Team met. Funding discussed. Timeline Q4. Coordination with lab approved."""
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Summarize this text."},
-                {"role": "user", "content": dummy_data}
-            ],
-            max_tokens=100
-        )
-        result = response.choices[0].message.content.strip()
-        respond(f"🧠 Summary:\n{result}")
-    except Exception as e:
-        respond(f"Error generating summary: {str(e)}")
+    respond("🧠 Summary:\nThis is a placeholder summary. Add OpenAI or HF model for full functionality.")
+
+@app.command("/grantstatus")
+def grant_status(ack, respond, command):
+    ack()
+    respond("📄 Grant Summary:\n• Title: NSF Research Fund\n• Status: Pending Review\n• Last Updated: April 10, 2025")
+    
+@app.command("/teamreminder")
+def team_reminder(ack, respond, command):
+    ack()
+    respond("📢 Reminder sent to @team to update their project logs before Friday.")
+
+@app.command("/decisionlog")
+def decision_log(ack, respond, command):
+    ack()
+    respond("🧾 Last Logged Decisions:\n1. Switch from AWS to GCP for deployment\n2. Include Slack integration in MVP\n3. Submit ethics form before May")
+
+@app.command("/helpcbc")
+def help_cbc(ack, respond, command):
+    ack()
+    respond("""🧠 CBCM Bot Commands:
+• `/logdecision [text]` – Log a project decision
+• `/trackupdate [text]` – Record project progress
+• `/summary` – Summarize key activity
+• `/grantstatus` – View grant status
+• `/teamreminder` – Nudge your team
+• `/decisionlog` – View recent decisions""")
 
 @app.event("app_mention")
 def on_mention(event, say):
