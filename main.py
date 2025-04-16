@@ -1,8 +1,12 @@
+
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 import openai
 import os
+import threading
+from flask import Flask
 
+# Initialize Slack App
 app = App(token=os.environ["SLACK_BOT_TOKEN"], signing_secret=os.environ["SLACK_SIGNING_SECRET"])
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -39,6 +43,20 @@ def summary(ack, respond, command):
 def on_mention(event, say):
     say("👋 I'm CBCM Bot! Use `/logdecision`, `/trackupdate`, or `/summary`.")
 
+# Dummy Flask web server to keep Render happy
+dummy_app = Flask(__name__)
+
+@dummy_app.route("/")
+def home():
+    return "CBCM Bot is alive!"
+
 if __name__ == "__main__":
-    handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
-    handler.start()
+    # Run Slack bot in a thread
+    def start_slack():
+        handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
+        handler.start()
+
+    threading.Thread(target=start_slack).start()
+
+    # Run dummy Flask server
+    dummy_app.run(host="0.0.0.0", port=3000)
